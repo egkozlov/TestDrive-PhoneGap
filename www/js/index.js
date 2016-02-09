@@ -18,36 +18,52 @@
  * Common app functionality will be attached to the `app` namespace.
  */
 var app = {
-  /**
-   * Application constructor.
-   */
-  initialize: function() {
-    this.bindEvents();
-  },
+    /**
+     * Application constructor.
+     */
+    initialize: function () {
+        var initialized = false;
+        var myApp = angular.module('myApp', ['kinvey']);
+        myApp.constant('kinveyConfig', {
+            appKey: 'kid_bJg1ypzual',
+            appSecret: 'd5e16c9315274c93920dc14f6ee79f0b'
+        });
+        myApp.run(['$kinvey', '$rootScope', '$location', 'kinveyConfig', function ($kinvey, $rootScope, $location, kinveyConfig) {
+            $rootScope.$on('$locationChangeStart', function (event, newUrl) {
 
-  /**
-   * Bind event listeners.
-   */
-  bindEvents: function() {
-    // Bind any events that are required on startup. Common events are: `load`,
-    // `deviceready`, `offline`, and `online`.
-    document.addEventListener('deviceready', this.onDeviceReady, false);
-  },
+                if (!initialized) {
+                    event.preventDefault(); // Stop the location change
+                    // Initialize Kinvey
+                    $kinvey.init(kinveyConfig).then(function () {
+                        initialized = true;
+                        console.log("init true");
+                        //$location..path($location.url(newUrl).hash); // Go to the page
+                    }, function (err) {
+                        console.log("init error " + JSON.stringify(err));
+                    });
+                }
+            });
+        }]);
+        this.bindEvents();
+    },
 
-  /**
-   * The deviceready event handler.
-   */
-  onDeviceReady: function() {
-    // Initialize Kinvey. Paste your app key and secret below.
-    var promise = Kinvey.init({
-      appKey    : 'App Key',
-      appSecret : 'App Secret'
-    });
-    promise.then(function(activeUser) {
-      // The `Kinvey.init` function returns a promise which resolves to the
-      // active user data (or `null` if there is no active user).
+    /**
+     * Bind event listeners.
+     */
+    bindEvents: function () {
+        // Bind any events that are required on startup. Common events are: `load`,
+        // `deviceready`, `offline`, and `online`.
+        console.log("bind device ready");
+        document.addEventListener('deviceready', this.onDeviceReady, false);
+    },
 
-      // Your app is now connected to Kinvey.
-    });
-  }
+    /**
+     * The deviceready event handler.
+     */
+    onDeviceReady: function () {
+        console.log("device ready");
+        // Initialize Kinvey. Paste your app key and secret below.
+        angular.bootstrap(document, ['myApp']);
+
+    }
 };
