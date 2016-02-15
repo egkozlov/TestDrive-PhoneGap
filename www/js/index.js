@@ -22,28 +22,6 @@ var app = {
      * Application constructor.
      */
     initialize: function () {
-        var initialized = false;
-        var myApp = angular.module('myApp', ['kinvey']);
-        myApp.constant('kinveyConfig', {
-            appKey: 'kid_bJg1ypzual',
-            appSecret: 'd5e16c9315274c93920dc14f6ee79f0b'
-        });
-        myApp.run(['$kinvey', '$rootScope', '$location', 'kinveyConfig', function ($kinvey, $rootScope, $location, kinveyConfig) {
-            $rootScope.$on('$locationChangeStart', function (event, newUrl) {
-
-                if (!initialized) {
-                    event.preventDefault(); // Stop the location change
-                    // Initialize Kinvey
-                    $kinvey.init(kinveyConfig).then(function () {
-                        initialized = true;
-                        console.log("init true");
-                        //$location..path($location.url(newUrl).hash); // Go to the page
-                    }, function (err) {
-                        console.log("init error " + JSON.stringify(err));
-                    });
-                }
-            });
-        }]);
         this.bindEvents();
     },
 
@@ -61,9 +39,40 @@ var app = {
      * The deviceready event handler.
      */
     onDeviceReady: function () {
-        console.log("device ready");
         // Initialize Kinvey. Paste your app key and secret below.
-        angular.bootstrap(document, ['myApp']);
+        var promise = Kinvey.init({
+            apiHostName: 'https://baas.kinvey.com',
+            micHostName: 'https://auth.kinvey.com',
+            appKey: 'kid_bJg1ypzual',
+            appSecret: 'd5e16c9315274c93920dc14f6ee79f0b'
+        });
+        promise.then(function(activeUser) {
+            if(activeUser){
+                showHideLogin(false);
+            }else{
+                showHideLogin(true);
+            }
+        }, function(error) {
+            console.log("init error " + JSON.stringify(error));
+        });
 
+        $('#tabs').tabs({
+            activate: function (event, ui) {
+                switch ((ui.newTab).index()) {
+                    case 1:
+                        loadProducts();
+                        break;
+                    case 2:
+                        loadPartners();
+                        break;
+                    case 3:
+                        loadTodos();
+                        break;
+                    case 4:
+                        loadColloteral();
+                        break;
+                }
+            }
+        });
     }
 };
