@@ -9,8 +9,14 @@ This project makes use of the [PhoneGap CLI](https://github.com/mwbrooks/phonega
 
 `npm install -g phonegap`
 
+Install bower:
+`npm install -g bower`
+
 ### Build
 Replace `App Key` and `App Secret` (`www/js/index.js`) with your application credentials.
+
+Run command:
+`bower install`
 
 Next, depending on the platform you’re targeting, build the project.
 
