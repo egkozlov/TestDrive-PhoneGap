@@ -40,20 +40,25 @@ var app = {
      */
     onDeviceReady: function () {
         // Initialize Kinvey. Paste your app key and secret below.
-        var promise = Kinvey.init({
+        Kinvey.init({
             apiHostName: 'https://baas.kinvey.com',
             micHostName: 'https://auth.kinvey.com',
             appKey: 'kid_bJg1ypzual',
             appSecret: 'd5e16c9315274c93920dc14f6ee79f0b'
         });
-        promise.then(function(activeUser) {
-            if(activeUser){
+        var promise = Kinvey.User.getActive().then(function(user) {
+            if (user) {
+                return user.me();
+            }
+            return user;
+        }).then(function(user) {
+            if(user){
                 showHideLogin(false);
             }else{
                 showHideLogin(true);
             }
-        }, function(error) {
-            console.log("init error " + JSON.stringify(error));
+        }).catch(function(error) {
+            console.log("get active " + JSON.stringify(error));
         });
 
         $('#tabs').tabs({
