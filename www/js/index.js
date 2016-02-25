@@ -46,19 +46,16 @@ var app = {
             appKey: 'kid_bJg1ypzual',
             appSecret: 'd5e16c9315274c93920dc14f6ee79f0b'
         });
-        var promise = Kinvey.User.getActive().then(function(user) {
-            if (user) {
-                return user.me();
-            }
-            return user;
-        }).then(function(user) {
+
+        Kinvey.User.getActiveUser().then(function (user) {
+            console.log("active user " + JSON.stringify(user));
             if(user){
                 showHideLogin(false);
             }else{
                 showHideLogin(true);
             }
-        }).catch(function(error) {
-            console.log("get active " + JSON.stringify(error));
+        }).catch(function(err){
+            console.log("get active error" + JSON.stringify(err));
         });
 
         $('#tabs').tabs({

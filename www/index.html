@@ -88,11 +88,23 @@
                 <h2>HR Tasks
                 </h2>
                 <div class="row btn-wrapper">
-                    <button id="todos-load-btn">Reload data</button>
+                    <button id="todos-refresh-btn">Refresh data</button>
+                    <button id="todos-sync-btn">Sync data</button>
                 </div>
-                <ul data-role="listview" id="todos-list" data-theme="a" data-icon="false" data-split-theme="a"
+                <ul data-role="listview" id="todos-list" data-theme="a" data-split-icon="delete" data-icon="false" data-split-theme="a"
                     data-inset="true">
                 </ul>
+                <div data-role="popup" id="popup-edit" data-theme="a" class="ui-corner-all" data-position-to="window">
+                    <form>
+                        <div style="padding:10px 20px;">
+                            <h3>Update ToDo action field:</h3>
+                            <label for="action-input" class="ui-hidden-accessible">Action:</label>
+                            <input type="text" name="action" id="action-input" value="" placeholder="action" data-theme="a">
+                            <button type="submit" class="ui-btn ui-corner-all ui-shadow ui-btn-icon-left ui-icon-check">Update</button>
+                            <button id="cancel-form" type="button" class="ui-btn ui-corner-all ui-shadow ui-btn-icon-left ui-icon-delete">Cancel</button>
+                        </div>
+                    </form>
+                </div>
             </div>
             <div id="colloteral">
                 <h2>VMWare Collateral</h2>
@@ -127,7 +139,7 @@
 
 
 <script type="text/javascript" src="cordova.js"></script>
-<script type="text/javascript" src="kinvey-lib/kinvey-phonegap-3.0.0-beta.7.min.js"></script>
+<script type="text/javascript" src="kinvey-lib/kinvey-phonegap-3.0.0-beta.8.min.js"></script>
 
 
 <script type="text/javascript" src="js/index.js"></script>

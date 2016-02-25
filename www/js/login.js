@@ -1,37 +1,39 @@
-$('#login-form').submit(function(event){
+$('#login-form').submit(function (event) {
     var username = $('#username').val(),
         password = $('#password').val();
-    var promise = Kinvey.User.login(username, password);
-    promise.then(function(user) {
+    var user = new Kinvey.User();
+    var promise = user.login(username, password);
+    promise.then(function (user) {
         showHideLogin(false);
 
-        $('#login-form').each(function(){
+        $('#login-form').each(function () {
             this.reset();
         });
-    }, function(err) {
+    }).catch(function (err) {
         console.log("login failed " + JSON.stringify(err));
         alert("Error: " + err.description);
     });
     event.preventDefault();
 });
 
-$('#logout-btn').click(function(){
-    var promise = Kinvey.User.logout();
-    promise.then(function(user) {
-        console.log("user " + JSON.stringify(user));
-        showHideLogin(true);
-    }, function(err) {
-        console.log("logout failed " + JSON.stringify(err));
+$('#logout-btn').click(function () {
+    Kinvey.User.getActiveUser().then(function (user) {
+        user.logout().then(function () {
+            showHideLogin(true);
+        }).catch(function (err) {
+            console.log("logout failed " + JSON.stringify(err));
+        });
     });
 });
 
-$('#mic-login-btn').click(function(){
+$('#mic-login-btn').click(function () {
     //TODO fix callbackURL
-    var promise = Kinvey.User.MIC.loginWithAuthorizationCodeLoginPage('http://google.com');
-    promise.then(function(user) {
+    var user = new Kinvey.User();
+    var promise = user.loginWithMIC('https://console.kinvey.com');
+    promise.then(function (user) {
         console.log("user " + JSON.stringify(user));
         showHideLogin(false);
-    }, function(err) {
+    }).catch(function (err) {
         console.log("login failed " + JSON.stringify(err));
     });
 });
